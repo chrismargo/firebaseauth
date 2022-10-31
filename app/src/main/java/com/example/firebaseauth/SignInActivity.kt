@@ -29,25 +29,26 @@ class SignInActivity : AppCompatActivity() {
 
             if (email.isNotEmpty() && pass.isNotEmpty()){
                     firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+                        it.exception?.printStackTrace()
                         if(it.isSuccessful){
                             startActivity(Intent(this, MainActivity::class.java))
                         }else{
-                            Toast.makeText(this@SignInActivity,"Account registration failed. Please try again",
+                            Toast.makeText(this,"Account login failed. Please try again",
                                 Toast.LENGTH_SHORT).show()
                         }
                     }
             }else{
-                Toast.makeText(this@SignInActivity,"Empty fields are not allowed. Please make sure all fields are filled",
+                Toast.makeText(this,"Empty fields are not allowed. Please make sure all fields are filled",
                     Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    override fun onStart(){
-        super.onStart()
-        if(firebaseAuth.currentUser != null){
-            startActivity(Intent(this@SignInActivity, MainActivity::class.java))
-        }
-
-    }
+//    override fun onStart(){
+//        super.onStart()
+//        if(firebaseAuth.currentUser != null){
+//            startActivity(Intent(this, MainActivity::class.java))
+//        }
+//
+//    }
 }

@@ -24,25 +24,34 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.button.setOnClickListener{
-            val email = binding.emailEt.text.toString()
-            val pass = binding.passET.text.toString()
-            val confirmPass = binding.confirmPassEt.text.toString()
+
+            val email = binding.emailEt.text.toString().trim()
+            val pass = binding.passET.text.toString().trim()
+            val confirmPass = binding.confirmPassEt.text.toString().trim()
 
             if (email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()){
                 if(pass == confirmPass){
-                    firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
-                        if(it.isSuccessful){
-                            val intent = Intent(this, SignInActivity::class.java)
-                            startActivity(intent)
-                        }else{
-                            Toast.makeText(this@SignUpActivity,"Account registration failed. Please try again",Toast.LENGTH_SHORT).show()
+                    try{
+                        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
+                            it.exception?.printStackTrace()
+                            if(it.isSuccessful){
+                                val intent = Intent(this, SignInActivity::class.java)
+                                startActivity(intent)
+                            }else{
+                                Toast.makeText(this,"Account registration failed. Please try again",Toast.LENGTH_SHORT).show()
+                            }
                         }
+                    } catch(e: Exception){
+                        Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT)
                     }
-                }else {
-                    Toast.makeText(this@SignUpActivity,"Password does not match. Please try again",Toast.LENGTH_SHORT).show()
+
                 }
-            }else{
-                Toast.makeText(this@SignUpActivity,"Empty fields are not allowed. Please make sure all fields are filled",Toast.LENGTH_SHORT).show()
+                else{
+                    Toast.makeText(this,"Password does not match. Please try again",Toast.LENGTH_SHORT).show()
+                }
+            }
+            else{
+                Toast.makeText(this,"Empty fields are not allowed. Please make sure all fields are filled",Toast.LENGTH_SHORT).show()
             }
         }
     }
